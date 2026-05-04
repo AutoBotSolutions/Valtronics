@@ -46,7 +46,7 @@ services:
       - mosquitto_data:/mosquitto/data
       - mosquitto_logs:/mosquitto/log
     healthcheck:
-      test: ["CMD", "mosquitto_pub", "-h", "localhost", "-t", "test", "-m", "healthcheck"]
+      test: ["CMD", "sh", "-c", "mosquitto_pub -h localhost -t test -m 'healthcheck' || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
