@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examples - Valtronics</title>
+    <meta name="description" content="Code examples and tutorials for Valtronics IoT platform, firmware development, and sensor integration">
+    <meta name="keywords" content="examples, tutorials, code, IoT, firmware, sensors, development">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --accent-color: #00ff00;
+            --gold-color: #ffd700;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --light-bg: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8c8;
+            --neon-glow: 0 0 20px rgba(0, 255, 255, 0.5);
+            --matrix-green: #00ff41;
+            --profit-glow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-20px, -20px) scale(1.1); }
+            66% { transform: translate(20px, -20px) scale(0.9); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-glow);
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes logoGlow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+        
+        .examples-header {
+            text-align: center;
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .examples-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { text-shadow: 0 0 40px rgba(255, 0, 255, 0.8); }
+        }
+        
+        .examples-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+        
+        /* Filter Tabs */
+        .filter-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem 2rem;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+        
+        .filter-tab {
+            padding: 0.8rem 1.5rem;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 25px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+        }
+        
+        .filter-tab:hover {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .filter-tab.active {
+            background: var(--primary-color);
+            color: var(--dark-bg);
+            border-color: var(--primary-color);
+        }
+        
+        /* Examples Grid */
+        .examples-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .example-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .example-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .example-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+        
+        .example-header {
+            padding: 1.5rem;
+            background: rgba(10, 10, 15, 0.5);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .example-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .example-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .example-content {
+            padding: 1.5rem;
+        }
+        
+        .example-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .example-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+        
+        .example-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        
+        .example-tag.platform { background: rgba(255, 0, 255, 0.1); border-color: rgba(255, 0, 255, 0.3); color: var(--secondary-color); }
+        .example-tag.sensor { background: rgba(0, 255, 0, 0.1); border-color: rgba(0, 255, 0, 0.3); color: var(--accent-color); }
+        .example-tag.protocol { background: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3); color: var(--gold-color); }
+        
+        .example-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .example-button {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .example-button:hover {
+            background: var(--primary-color);
+            color: var(--dark-bg);
+            transform: translateY(-2px);
+        }
+        
+        .example-button.secondary {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .example-button.secondary:hover {
+            background: var(--secondary-color);
+            color: var(--dark-bg);
+        }
+        
+        .difficulty {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .difficulty-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-color);
+        }
+        
+        .difficulty-dot.medium { background: var(--gold-color); }
+        .difficulty-dot.hard { background: #ff6b6b; }
+        
+        /* Code Preview */
+        .code-preview {
+            background: var(--darker-bg);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .code-preview code {
+            font-family: 'Space Mono', monospace;
+            color: var(--matrix-green);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        /* Tutorial Section */
+        .tutorial-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        
+        .tutorial-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 0, 255, 0.3);
+            border-color: rgba(255, 0, 255, 0.5);
+        }
+        
+        .tutorial-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-color);
+        }
+        
+        .tutorial-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+        
+        .tutorial-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tutorial-steps {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tutorial-steps li {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .tutorial-steps li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        .tutorial-steps {
+            counter-reset: step-counter;
+        }
+        
+        .tutorial-steps li {
+            counter-increment: step-counter;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-text {
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .examples-title {
+                font-size: 2.5rem;
+            }
+            
+            .examples-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tutorial-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .example-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">VALTRONICS</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="firmware.html">Firmware</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="examples.html" class="active">Examples</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="examples-header">
+            <h1 class="examples-title">Code Examples & Tutorials</h1>
+            <p class="examples-subtitle">
+                Practical examples and step-by-step tutorials to help you get started with the Valtronics platform. 
+                From basic sensor integration to advanced multi-sensor applications.
+            </p>
+        </header>
+        
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All Examples</button>
+                <button class="filter-tab" data-filter="basic">Basic</button>
+                <button class="filter-tab" data-filter="intermediate">Intermediate</button>
+                <button class="filter-tab" data-filter="advanced">Advanced</button>
+                <button class="filter-tab" data-filter="tutorials">Tutorials</button>
+            </div>
+        </section>
+        
+        <!-- Examples Section -->
+        <section class="examples-section">
+            <div class="examples-grid">
+                <!-- Basic Temperature Sensor Example -->
+                <div class="example-card" data-category="basic">
+                    <div class="example-header">
+                        <h3 class="example-title">Basic Temperature Sensor</h3>
+                        <p class="example-subtitle">ESP32 with DHT22 sensor</p>
+                    </div>
+                    <div class="example-content">
+                        <p class="example-description">
+                            Simple temperature monitoring using ESP32 and DHT22 sensor with MQTT telemetry.
+                        </p>
+                        <div class="example-tags">
+                            <span class="example-tag platform">ESP32</span>
+                            <span class="example-tag sensor">DHT22</span>
+                            <span class="example-tag protocol">MQTT</span>
+                        </div>
+                        <div class="code-preview">
+                            <code>
+#include "valtronics.h"
+
+TemperatureSensor tempSensor(4);
+
+void setup() {
+    Serial.begin(115200);
+    tempSensor.init();
+    Valtronics.begin();
+    Valtronics.connectWiFi("SSID", "PASSWORD");
+}
+
+void loop() {
+    temperature_data_t data = tempSensor.read();
+    if (data.valid) {
+        Valtronics.sendTelemetry("temperature", data.temperature);
+    }
+    delay(30000);
+}
+                            </code>
+                        </div>
+                        <div class="example-actions">
+                            <a href="#" class="example-button">
+                                <span></span>
+                                <span>View Full Code</span>
+                            </a>
+                            <div class="difficulty">
+                                <span class="difficulty-dot"></span>
+                                <span>Basic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Multi-Sensor Gateway -->
+                <div class="example-card" data-category="intermediate">
+                    <div class="example-header">
+                        <h3 class="example-title">Multi-Sensor Gateway</h3>
+                        <p class="example-subtitle">Arduino with multiple sensors</p>
+                    </div>
+                    <div class="example-content">
+                        <p class="example-description">
+                            Comprehensive sensor gateway with temperature, humidity, and air quality monitoring.
+                        </p>
+                        <div class="example-tags">
+                            <span class="example-tag platform">Arduino</span>
+                            <span class="example-tag sensor">BME280</span>
+                            <span class="example-tag sensor">PMS5003</span>
+                            <span class="example-tag protocol">Ethernet</span>
+                        </div>
+                        <div class="code-preview">
+                            <code>
+#include "valtronics.h"
+
+SensorManager sensors;
+
+void setup() {
+    sensors.addSensor(new TemperatureSensor(4));
+    sensors.addSensor(new HumiditySensor(4));
+    sensors.addSensor(new AirQualitySensor(16));
+    
+    Valtronics.begin();
+    sensors.init();
+}
+
+void loop() {
+    sensor_data_array_t data = sensors.readAll();
+    Valtronics.sendTelemetry(data);
+    delay(60000);
+}
+                            </code>
+                        </div>
+                        <div class="example-actions">
+                            <a href="#" class="example-button">
+                                <span></span>
+                                <span>View Full Code</span>
+                            </a>
+                            <div class="difficulty">
+                                <span class="difficulty-dot medium"></span>
+                                <span>Intermediate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Industrial Vibration Monitor -->
+                <div class="example-card" data-category="advanced">
+                    <div class="example-header">
+                        <h3 class="example-title">Industrial Vibration Monitor</h3>
+                        <p class="example-subtitle">STM32 with FFT analysis</p>
+                    </div>
+                    <div class="example-content">
+                        <p class="example-description">
+                            Advanced vibration monitoring with FFT analysis and predictive maintenance.
+                        </p>
+                        <div class="example-tags">
+                            <span class="example-tag platform">STM32</span>
+                            <span class="example-tag sensor">ADXL345</span>
+                            <span class="example-tag protocol">Modbus</span>
+                            <span class="example-tag protocol">CAN Bus</span>
+                        </div>
+                        <div class="code-preview">
+                            <code>
+#include "valtronics.h"
+
+VibrationSensor vibSensor(0x53);
+FFTAnalyzer fft;
+
+void setup() {
+    vibSensor.init();
+    fft.init(1024);
+    Valtronics.begin();
+}
+
+void loop() {
+    vibration_data_t data = vibSensor.read();
+    fft_result_t fft_result = fft.analyze(data);
+    
+    if (fft_result.anomaly_detected) {
+        Valtronics.sendAlert("vibration_anomaly", fft_result);
+    }
+}
+                            </code>
+                        </div>
+                        <div class="example-actions">
+                            <a href="#" class="example-button">
+                                <span></span>
+                                <span>View Full Code</span>
+                            </a>
+                            <div class="difficulty">
+                                <span class="difficulty-dot hard"></span>
+                                <span>Advanced</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- MQTT Integration -->
+                <div class="example-card" data-category="basic">
+                    <div class="example-header">
+                        <h3 class="example-title">MQTT Integration</h3>
+                        <p class="example-subtitle">Real-time data streaming</p>
+                    </div>
+                    <div class="example-content">
+                        <p class="example-description">
+                            Set up MQTT communication for real-time data streaming and command handling.
+                        </p>
+                        <div class="example-tags">
+                            <span class="example-tag platform">ESP32</span>
+                            <span class="example-tag protocol">MQTT</span>
+                            <span class="example-tag protocol">WebSocket</span>
+                        </div>
+                        <div class="code-preview">
+                            <code>
+MQTTClient mqtt("mqtt.valtronics.com", 1883, "device_id");
+
+void setup() {
+    mqtt.connect();
+    mqtt.subscribe("devices/+/commands");
+    mqtt.setCommandCallback(handleCommand);
+}
+
+void handleCommand(String command) {
+    if (command == "status") {
+        sendStatusReport();
+    }
+}
+                            </code>
+                        </div>
+                        <div class="example-actions">
+                            <a href="#" class="example-button">
+                                <span></span>
+                                <span>View Full Code</span>
+                            </a>
+                            <div class="difficulty">
+                                <span class="difficulty-dot"></span>
+                                <span>Basic</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- OTA Updates -->
+                <div class="example-card" data-category="intermediate">
+                    <div class="example-header">
+                        <h3 class="example-title">OTA Firmware Updates</h3>
+                        <p class="example-subtitle">Remote firmware management</p>
+                    </div>
+                    <div class="example-content">
+                        <p class="example-description">
+                            Implement over-the-air firmware updates with rollback capabilities.
+                        </p>
+                        <div class="example-tags">
+                            <span class="example-tag platform">ESP32</span>
+                            <span class="example-tag protocol">HTTP</span>
+                            <span class="example-tag protocol">HTTPS</span>
+                        </div>
+                        <div class="code-preview">
+                            <code>
+#include "valtronics.h"
+
+OTAManager ota;
+
+void setup() {
+    ota.init();
+    ota.setCallback(onOTAProgress);
+}
+
+void onOTAProgress(int progress) {
+    Serial.printf("OTA Progress: %d%%\n", progress);
+}
+
+void loop() {
+    if (ota.updateAvailable()) {
+        ota.performUpdate();
+    }
+}
+                            </code>
+                        </div>
+                        <div class="example-actions">
+                            <a href="#" class="example-button">
+                                <span></span>
+                                <span>View Full Code</span>
+                            </a>
+                            <div class="difficulty">
+                                <span class="difficulty-dot medium"></span>
+                                <span>Intermediate</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Data Fusion -->
+                <div class="example-card" data-category="advanced">
+                    <div class="example-header">
+                        <h3 class="example-title">Multi-Sensor Data Fusion</h3>
+                        <p class="example-subtitle">Advanced sensor correlation</p>
+                    </div>
+                    <div class="example-content">
+                        <p class="example-description">
+                            Implement data fusion algorithms for multi-sensor correlation and analysis.
+                        </p>
+                        <div class="example-tags">
+                            <span class="example-tag platform">ESP32</span>
+                            <span class="example-tag sensor">Multiple</span>
+                            <span class="example-tag protocol">Edge Computing</span>
+                        </div>
+                        <div class="code-preview">
+                            <code>
+FusionEngine fusion;
+
+void setup() {
+    fusion.init();
+    fusion.enableCorrelationAnalysis();
+}
+
+void loop() {
+    sensor_data_array_t data = readAllSensors();
+    fused_data_t result = fusion.process(data);
+    
+    Valtronics.sendFusedData(result);
+}
+                            </code>
+                        </div>
+                        <div class="example-actions">
+                            <a href="#" class="example-button">
+                                <span></span>
+                                <span>View Full Code</span>
+                            </a>
+                            <div class="difficulty">
+                                <span class="difficulty-dot hard"></span>
+                                <span>Advanced</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Tutorial Section -->
+        <section class="tutorial-section">
+            <h2 class="examples-title">Step-by-Step Tutorials</h2>
+            <div class="tutorial-grid">
+                <div class="tutorial-card">
+                    
+                    <h3 class="tutorial-title">Getting Started Guide</h3>
+                    <p class="tutorial-description">
+                        Complete walkthrough from setup to your first working device.
+                    </p>
+                    <ol class="tutorial-steps">
+                        <li>Install development environment</li>
+                        <li>Configure your first device</li>
+                        <li>Connect sensors</li>
+                        <li>Deploy firmware</li>
+                        <li>View real-time data</li>
+                    </ol>
+                    <a href="#" class="example-button secondary">
+                        <span></span>
+                        <span>Start Tutorial</span>
+                    </a>
+                </div>
+                
+                <div class="tutorial-card">
+                    
+                    <h3 class="tutorial-title">Sensor Integration</h3>
+                    <p class="tutorial-description">
+                        Learn to integrate various sensor types with the platform.
+                    </p>
+                    <ol class="tutorial-steps">
+                        <li>Choose sensor type</li>
+                        <li>Wire the sensor</li>
+                        <li>Configure sensor driver</li>
+                        <li>Calibrate sensor</li>
+                        <li>Test data collection</li>
+                    </ol>
+                    <a href="#" class="example-button secondary">
+                        <span></span>
+                        <span>Start Tutorial</span>
+                    </a>
+                </div>
+                
+                <div class="tutorial-card">
+                    
+                    <h3 class="tutorial-title">Custom Firmware Development</h3>
+                    <p class="tutorial-description">
+                        Build custom firmware applications for specific use cases.
+                    </p>
+                    <ol class="tutorial-steps">
+                        <li>Set up development environment</li>
+                        <li>Create firmware project</li>
+                        <li>Implement sensor drivers</li>
+                        <li>Add communication protocols</li>
+                        <li>Test and debug</li>
+                    </ol>
+                    <a href="#" class="example-button secondary">
+                        <span></span>
+                        <span>Start Tutorial</span>
+                    </a>
+                </div>
+                
+                <div class="tutorial-card">
+                    
+                    <h3 class="tutorial-title">Analytics Integration</h3>
+                    <p class="tutorial-description">
+                        Implement AI-powered analytics and predictive maintenance.
+                    </p>
+                    <ol class="tutorial-steps>
+                        <li>Configure data collection</li>
+                        <li>Set up analytics engine</li>
+                        <li>Implement anomaly detection</li>
+                        <li>Create alert rules</li>
+                        <li>Monitor insights</li>
+                    </ol>
+                    <a href="#" class="example-button secondary">
+                        <span></span>
+                        <span>Start Tutorial</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="firmware.html">Firmware</a>
+                <a href="api.html">API Reference</a>
+                <a href="examples.html">Examples</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <p class="footer-text">
+                © 2024 Valtronics. The Future of Intelligent Electronics.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Filter functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const exampleCards = document.querySelectorAll('.example-card');
+        
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Update active tab
+                filterTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Filter examples
+                const filter = this.getAttribute('data-filter');
+                
+                exampleCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                    } else if (filter === 'tutorials') {
+                        // Handle tutorials separately
+                        card.style.display = 'none';
+                        document.querySelector('.tutorial-section').style.display = 'none';
+                    } else {
+                        const category = card.getAttribute('data-category');
+                        card.style.display = category === filter ? 'block' : 'none';
+                    }
+                });
+                
+                // Show/hide tutorial section
+                const tutorialSection = document.querySelector('.tutorial-section');
+                if (filter === 'tutorials') {
+                    tutorialSection.style.display = 'block';
+                    document.querySelector('.examples-section').style.display = 'none';
+                } else {
+                    tutorialSection.style.display = 'none';
+                    document.querySelector('.examples-section').style.display = 'block';
+                }
+            });
+        });
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Add animation to cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all cards
+        document.querySelectorAll('.example-card, .tutorial-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // Copy code functionality
+        document.querySelectorAll('.code-preview').forEach(preview => {
+            preview.addEventListener('click', function() {
+                const code = this.querySelector('code');
+                if (code) {
+                    navigator.clipboard.writeText(code.textContent);
+                    
+                    // Visual feedback
+                    const originalBg = this.style.backgroundColor;
+                    this.style.backgroundColor = 'rgba(0, 255, 0, 0.1)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBg;
+                    }, 200);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

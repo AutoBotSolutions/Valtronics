@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Valtronics</title>
+    <meta name="description" content="RESTful API documentation for Valtronics IoT platform with device management, telemetry, and analytics endpoints">
+    <meta name="keywords" content="API, REST, IoT, device management, telemetry, analytics, documentation">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --accent-color: #00ff00;
+            --gold-color: #ffd700;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --light-bg: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8c8;
+            --neon-glow: 0 0 20px rgba(0, 255, 255, 0.5);
+            --matrix-green: #00ff41;
+            --profit-glow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-20px, -20px) scale(1.1); }
+            66% { transform: translate(20px, -20px) scale(0.9); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-glow);
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes logoGlow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding-top: 100px;
+            min-height: 100vh;
+        }
+        
+        .api-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: var(--neon-glow);
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+            padding: 0.5rem;
+            border-radius: 5px;
+        }
+        
+        .sidebar-nav a:hover {
+            color: var(--primary-color);
+            background: rgba(0, 255, 255, 0.1);
+        }
+        
+        .sidebar-nav a.active {
+            color: var(--primary-color);
+            background: rgba(0, 255, 255, 0.2);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* API Content */
+        .api-content {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        .api-header {
+            margin-bottom: 2rem;
+        }
+        
+        .api-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: var(--neon-glow);
+        }
+        
+        .api-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        /* API Sections */
+        .api-section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+        
+        .section-description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+        
+        /* API Endpoints */
+        .endpoint-group {
+            margin-bottom: 2rem;
+        }
+        
+        .endpoint-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .endpoint {
+            background: rgba(10, 10, 15, 0.5);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .endpoint:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2);
+            border-color: rgba(0, 255, 255, 0.4);
+        }
+        
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .endpoint-method {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .endpoint-get { background: #28a745; color: white; }
+        .endpoint-post { background: #007bff; color: white; }
+        .endpoint-put { background: #ffc107; color: black; }
+        .endpoint-delete { background: #dc3545; color: white; }
+        .endpoint-patch { background: #6f42c1; color: white; }
+        
+        .endpoint-url {
+            font-family: 'Space Mono', monospace;
+            color: var(--primary-color);
+            font-size: 1rem;
+            flex: 1;
+        }
+        
+        .endpoint-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .endpoint-params {
+            margin-bottom: 1rem;
+        }
+        
+        .params-title {
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        
+        .param-table th,
+        .param-table td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+        
+        .param-table th {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        .param-table td {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        .param-required {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .param-optional {
+            color: var(--accent-color);
+        }
+        
+        /* Code Blocks */
+        .code-block {
+            background: var(--darker-bg);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+        
+        .code-block code {
+            font-family: 'Space Mono', monospace;
+            color: var(--matrix-green);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Response Examples */
+        .response-example {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .response-title {
+            color: var(--accent-color);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .response-code {
+            font-family: 'Space Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* Authentication Section */
+        .auth-section {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .auth-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--gold-color);
+            margin-bottom: 1rem;
+            text-shadow: var(--profit-glow);
+        }
+        
+        .auth-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Rate Limiting */
+        .rate-limit {
+            background: rgba(255, 0, 255, 0.1);
+            border: 1px solid rgba(255, 0, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .rate-limit-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .rate-limit-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-text {
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .api-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+                margin-bottom: 2rem;
+            }
+            
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .param-table {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">VALTRONICS</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="firmware.html">Firmware</a></li>
+                <li><a href="api.html" class="active">API</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="api-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h3 class="sidebar-title">API Reference</h3>
+                <ul class="sidebar-nav">
+                    <li><a href="#overview" class="active">Overview</a></li>
+                    <li><a href="#authentication">Authentication</a></li>
+                    <li><a href="#devices">Devices</a></li>
+                    <li><a href="#telemetry">Telemetry</a></li>
+                    <li><a href="#analytics">Analytics</a></li>
+                    <li><a href="#alerts">Alerts</a></li>
+                    <li><a href="#firmware">Firmware</a></li>
+                    <li><a href="#websocket">WebSocket</a></li>
+                    <li><a href="#rate-limits">Rate Limits</a></li>
+                </ul>
+            </aside>
+            
+            <!-- API Content -->
+            <main class="api-content">
+                <div class="api-header">
+                    <h1 class="api-title">API Documentation</h1>
+                    <p class="api-subtitle">
+                        RESTful API for device management, telemetry data, analytics, and real-time communication. 
+                        All endpoints support JSON format with comprehensive error handling and authentication.
+                    </p>
+                </div>
+                
+                <!-- Authentication Section -->
+                <section class="auth-section" id="authentication">
+                    <h2 class="auth-title">🔑 Authentication</h2>
+                    <p class="auth-description">
+                        All API endpoints require authentication using Bearer tokens. Include the token in the 
+                        Authorization header: <code>Authorization: Bearer YOUR_API_KEY</code>
+                    </p>
+                    <div class="code-block">
+                        <code>
+curl -H "Authorization: Bearer YOUR_API_KEY" \
+     https://api.valtronics.com/v1/devices
+                        </code>
+                    </div>
+                </section>
+                
+                <!-- Overview Section -->
+                <section class="api-section" id="overview">
+                    <h2 class="section-title">Overview</h2>
+                    <p class="section-description">
+                        The Valtronics API provides comprehensive access to device management, telemetry data, 
+                        analytics, and real-time communication capabilities. The API follows RESTful principles 
+                        and uses standard HTTP status codes.
+                    </p>
+                    
+                    <div class="endpoint-group">
+                        <h3 class="endpoint-title">Base URL</h3>
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <div class="endpoint-url">https://api.valtronics.com/v1</div>
+                            </div>
+                            <p class="endpoint-description">
+                                All API endpoints are relative to this base URL. The API version is v1.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Devices Section -->
+                <section class="api-section" id="devices">
+                    <h2 class="section-title">Devices</h2>
+                    <p class="section-description">
+                        Manage IoT devices, register new devices, and monitor device status and configuration.
+                    </p>
+                    
+                    <div class="endpoint-group">
+                        <h3 class="endpoint-title">Device Management</h3>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/devices</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Retrieve a list of all registered devices with their current status and configuration.
+                            </p>
+                            <div class="endpoint-params">
+                                <div class="params-title">Query Parameters:</div>
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>page</td>
+                                            <td>integer</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Page number (default: 1)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>limit</td>
+                                            <td>integer</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Items per page (default: 50, max: 100)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>status</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Filter by device status (online, offline, error)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "devices": [
+    {
+      "id": "VT-ESP32-001",
+      "name": "Temperature Sensor 1",
+      "type": "temperature_sensor",
+      "status": "online",
+      "last_seen": "2024-01-15T10:30:00Z",
+      "location": "Building A - Floor 1",
+      "firmware_version": "2.0.0",
+      "platform": "esp32"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 50,
+    "total": 1,
+    "pages": 1
+  }
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-post">POST</span>
+                                <span class="endpoint-url">/devices</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Register a new device with the platform and receive a unique device ID.
+                            </p>
+                            <div class="endpoint-params">
+                                <div class="params-title">Request Body:</div>
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>name</td>
+                                            <td>string</td>
+                                            <td class="param-required">Yes</td>
+                                            <td>Device name</td>
+                                        </tr>
+                                        <tr>
+                                            <td>type</td>
+                                            <td>string</td>
+                                            <td class="param-required">Yes</td>
+                                            <td>Device type (temperature_sensor, humidity_sensor, etc.)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>platform</td>
+                                            <td>string</td>
+                                            <td class="param-required">Yes</td>
+                                            <td>Hardware platform (esp32, arduino, stm32)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>location</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Device location</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "device": {
+    "id": "VT-ESP32-002",
+    "name": "New Temperature Sensor",
+    "type": "temperature_sensor",
+    "platform": "esp32",
+    "location": "Building B - Floor 2",
+    "status": "offline",
+    "created_at": "2024-01-15T10:30:00Z",
+    "api_key": "device_api_key_here"
+  }
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/devices/{device_id}</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Get detailed information about a specific device.
+                            </p>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "device": {
+    "id": "VT-ESP32-001",
+    "name": "Temperature Sensor 1",
+    "type": "temperature_sensor",
+    "status": "online",
+    "last_seen": "2024-01-15T10:30:00Z",
+    "location": "Building A - Floor 1",
+    "firmware_version": "2.0.0",
+    "platform": "esp32",
+    "configuration": {
+      "sampling_interval": 30,
+      "alert_threshold": 30.0,
+      "calibration_offset": 0.5
+    },
+    "sensors": [
+      {
+        "id": "temp_01",
+        "type": "temperature",
+        "model": "DHT22",
+        "status": "active"
+      }
+    ]
+  }
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-put">PUT</span>
+                                <span class="endpoint-url">/devices/{device_id}</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Update device configuration and settings.
+                            </p>
+                            <div class="response-example">
+                                <div class="response-title">Request Example:</div>
+                                <div class="response-code">
+{
+  "name": "Updated Temperature Sensor",
+  "location": "Building A - Floor 1 - Room 101",
+  "configuration": {
+    "sampling_interval": 60,
+    "alert_threshold": 35.0,
+    "calibration_offset": 1.0
+  }
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-delete">DELETE</span>
+                                <span class="endpoint-url">/devices/{device_id}</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Remove a device from the platform. This action cannot be undone.
+                            </p>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "message": "Device VT-ESP32-001 deleted successfully"
+}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Telemetry Section -->
+                <section class="api-section" id="telemetry">
+                    <h2 class="section-title">Telemetry</h2>
+                    <p class="section-description">
+                        Access real-time and historical sensor data from devices with flexible query parameters.
+                    </p>
+                    
+                    <div class="endpoint-group">
+                        <h3 class="endpoint-title">Data Access</h3>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/telemetry/{device_id}</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Get the latest telemetry data from a specific device.
+                            </p>
+                            <div class="endpoint-params">
+                                <div class="params-title">Query Parameters:</div>
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>sensors</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Comma-separated list of sensor types</td>
+                                        </tr>
+                                        <tr>
+                                            <td>limit</td>
+                                            <td>integer</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Number of records to return (default: 100)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "device_id": "VT-ESP32-001",
+  "telemetry": [
+    {
+      "timestamp": "2024-01-15T10:30:00Z",
+      "sensors": {
+        "temperature": {
+          "value": 25.5,
+          "unit": "C",
+          "quality": 0.95
+        },
+        "humidity": {
+          "value": 60.2,
+          "unit": "%",
+          "quality": 0.92
+        }
+      }
+    }
+  ]
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/telemetry/{device_id}/history</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Get historical telemetry data for a specific device.
+                            </p>
+                            <div class="endpoint-params">
+                                <div class="params-title">Query Parameters:</div>
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>from</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Start date (ISO 8601 format)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>to</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>End date (ISO 8601 format)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>interval</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Aggregation interval (1m, 5m, 1h, 1d)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-post">POST</span>
+                                <span class="endpoint-url">/telemetry/{device_id}</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Submit telemetry data from a device (used by devices to send data).
+                            </p>
+                            <div class="response-example">
+                                <div class="response-title">Request Example:</div>
+                                <div class="response-code">
+{
+  "timestamp": "2024-01-15T10:30:00Z",
+  "sensors": {
+    "temperature": {
+      "value": 25.5,
+      "unit": "C"
+    },
+    "humidity": {
+      "value": 60.2,
+      "unit": "%"
+    }
+  }
+}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Analytics Section -->
+                <section class="api-section" id="analytics">
+                    <h2 class="section-title">Analytics</h2>
+                    <p class="section-description">
+                        Retrieve AI-powered insights, predictive maintenance recommendations, and data analytics.
+                    </p>
+                    
+                    <div class="endpoint-group">
+                        <h3 class="endpoint-title">Analytics Endpoints</h3>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/analytics/{device_id}/insights</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Get AI-powered insights and analysis for a specific device.
+                            </p>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "device_id": "VT-ESP32-001",
+  "insights": [
+    {
+      "type": "trend_analysis",
+      "description": "Temperature showing upward trend over last 24 hours",
+      "confidence": 0.85,
+      "timestamp": "2024-01-15T10:30:00Z"
+    },
+    {
+      "type": "anomaly_detection",
+      "description": "Unusual humidity spike detected",
+      "severity": "medium",
+      "confidence": 0.92
+    }
+  ]
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/analytics/{device_id}/predictions</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Get predictive maintenance recommendations and failure predictions.
+                            </p>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "device_id": "VT-ESP32-001",
+  "predictions": {
+    "health_score": 0.88,
+    "maintenance_needed": false,
+    "predicted_failure": null,
+    "next_maintenance": "2024-02-15T00:00:00Z",
+    "recommendations": [
+      "Sensor calibration recommended within 30 days",
+      "Firmware update available for improved accuracy"
+    ]
+  }
+}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Alerts Section -->
+                <section class="api-section" id="alerts">
+                    <h2 class="section-title">Alerts</h2>
+                    <p class="section-description">
+                        Manage device alerts, configure alert rules, and receive notifications.
+                    </p>
+                    
+                    <div class="endpoint-group">
+                        <h3 class="endpoint-title">Alert Management</h3>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-get">GET</span>
+                                <span class="endpoint-url">/alerts</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Get all active alerts across all devices.
+                            </p>
+                            <div class="endpoint-params">
+                                <div class="params-title">Query Parameters:</div>
+                                <table class="param-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Parameter</th>
+                                            <th>Type</th>
+                                            <th>Required</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>severity</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Filter by severity (low, medium, high, critical)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>device_id</td>
+                                            <td>string</td>
+                                            <td class="param-optional">No</td>
+                                            <td>Filter by specific device</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="response-example">
+                                <div class="response-title">Response Example:</div>
+                                <div class="response-code">
+{
+  "alerts": [
+    {
+      "id": "alert_001",
+      "device_id": "VT-ESP32-001",
+      "type": "threshold_exceeded",
+      "severity": "high",
+      "message": "Temperature exceeded threshold of 30°C",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "acknowledged": false
+    }
+  ]
+}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="endpoint-method endpoint-post">POST</span>
+                                <span class="endpoint-url">/alerts/{alert_id}/acknowledge</span>
+                            </div>
+                            <p class="endpoint-description">
+                                Acknowledge an alert to mark it as seen.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Rate Limits Section -->
+                <section class="rate-limit" id="rate-limits">
+                    <h2 class="rate-limit-title">⏱️ Rate Limits</h2>
+                    <p class="rate-limit-description">
+                        API requests are rate-limited to ensure fair usage and system stability. 
+                        Current limits are 1000 requests per hour per API key.
+                    </p>
+                    <div class="endpoint-params">
+                        <div class="params-title">Rate Limit Headers:</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th>Header</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>X-RateLimit-Limit</td>
+                                    <td>Maximum requests per hour</td>
+                                </tr>
+                                <tr>
+                                    <td>X-RateLimit-Remaining</td>
+                                    <td>Remaining requests in current window</td>
+                                </tr>
+                                <tr>
+                                    <td>X-RateLimit-Reset</td>
+                                    <td>Unix timestamp when rate limit resets</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="firmware.html">Firmware</a>
+                <a href="api.html">API Reference</a>
+                <a href="examples.html">Examples</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <p class="footer-text">
+                © 2024 Valtronics. The Future of Intelligent Electronics.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Smooth scrolling for sidebar navigation
+        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active state
+                    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Intersection Observer for active sidebar highlighting
+        const sections = document.querySelectorAll('.api-section, .auth-section, .rate-limit');
+        const navLinks = document.querySelectorAll('.sidebar-nav a');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === '#' + id) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+        
+        // Copy code blocks functionality
+        document.querySelectorAll('.code-block').forEach(block => {
+            block.addEventListener('click', function() {
+                const code = this.querySelector('code');
+                if (code) {
+                    navigator.clipboard.writeText(code.textContent);
+                    
+                    // Visual feedback
+                    const originalBg = this.style.backgroundColor;
+                    this.style.backgroundColor = 'rgba(0, 255, 0, 0.1)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = originalBg;
+                    }, 200);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

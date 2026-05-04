@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Valtronics</title>
+    <meta name="description" content="Comprehensive documentation for Valtronics IoT platform, firmware development, and API reference">
+    <meta name="keywords" content="documentation, API, firmware, IoT, development guide">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --accent-color: #00ff00;
+            --gold-color: #ffd700;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --light-bg: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8c8;
+            --neon-glow: 0 0 20px rgba(0, 255, 255, 0.5);
+            --matrix-green: #00ff41;
+            --profit-glow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-20px, -20px) scale(1.1); }
+            66% { transform: translate(20px, -20px) scale(0.9); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-glow);
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes logoGlow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+        
+        .nav-links a.active {
+            color: var(--primary-color);
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            display: flex;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .docs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            gap: 2rem;
+            width: 100%;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        
+        .sidebar-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: var(--neon-glow);
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+        }
+        
+        .sidebar-nav li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .sidebar-nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        
+        .sidebar-nav a:hover {
+            background: rgba(0, 255, 255, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .sidebar-nav a.active {
+            background: rgba(0, 255, 255, 0.2);
+            color: var(--primary-color);
+            border-left: 3px solid var(--primary-color);
+        }
+        
+        /* Documentation Content */
+        .docs-content {
+            flex: 1;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            padding: 2rem;
+        }
+        
+        .docs-header {
+            margin-bottom: 2rem;
+        }
+        
+        .docs-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-shadow: var(--neon-glow);
+        }
+        
+        .docs-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .docs-section {
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+        
+        .section-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .feature-card {
+            background: rgba(0, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+            border-color: rgba(0, 255, 255, 0.5);
+        }
+        
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        /* API Documentation Styles */
+        .api-endpoint {
+            background: var(--darker-bg);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .endpoint-method {
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .endpoint-get {
+            background: rgba(0, 255, 0, 0.2);
+            color: var(--accent-color);
+            border: 1px solid var(--accent-color);
+        }
+        
+        .endpoint-post {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid #ffa500;
+        }
+        
+        .endpoint-put {
+            background: rgba(0, 100, 255, 0.2);
+            color: #0064ff;
+            border: 1px solid #0064ff;
+        }
+        
+        .endpoint-delete {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+            border: 1px solid #ff0000;
+        }
+        
+        .endpoint-url {
+            font-family: 'Space Mono', monospace;
+            color: var(--primary-color);
+            flex: 1;
+        }
+        
+        .endpoint-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Code Block Styles */
+        .code-block {
+            background: var(--darker-bg);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: var(--text-secondary);
+        }
+        
+        /* Wiki Documentation Grid */
+        .wiki-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .wiki-section {
+            background: rgba(255, 215, 0, 0.05);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .wiki-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+            border-color: rgba(255, 215, 0, 0.4);
+        }
+        
+        .wiki-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .wiki-icon {
+            font-size: 1.5rem;
+            margin-right: 0.8rem;
+            color: var(--gold-color);
+        }
+        
+        .wiki-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--gold-color);
+            text-shadow: var(--profit-glow);
+        }
+        
+        .wiki-links {
+            list-style: none;
+        }
+        
+        .wiki-links li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .wiki-links a {
+            color: var(--accent-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 0.3rem 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+        
+        .wiki-links a:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateX(3px);
+        }
+        
+        .wiki-links a::before {
+            content: '▸';
+            margin-right: 0.5rem;
+            color: var(--accent-color);
+        }
+        
+        /* Owner Info */
+        .owner-info {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .owner-info p {
+            color: var(--text-secondary);
+            margin: 0.5rem 0;
+        }
+        
+        .owner-info strong {
+            color: var(--gold-color);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .docs-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                position: static;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .wiki-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-text {
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">VALTRONICS</div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="docs.html" class="active">Documentation</a></li>
+                <li><a href="firmware.html">Firmware</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="docs-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <h3 class="sidebar-title">Documentation</h3>
+                <ul class="sidebar-nav">
+                    <li><a href="#getting-started" class="active">Getting Started</a></li>
+                    <li><a href="#platform-overview">Platform Overview</a></li>
+                    <li><a href="#firmware-development">Firmware Development</a></li>
+                    <li><a href="#api-reference">API Reference</a></li>
+                    <li><a href="#sensor-integration">Sensor Integration</a></li>
+                    <li><a href="#deployment">Deployment</a></li>
+                    <li><a href="#troubleshooting">Troubleshooting</a></li>
+                </ul>
+            </aside>
+            
+            <!-- Documentation Content -->
+            <main class="docs-content">
+                <div class="docs-header">
+                    <h1 class="docs-title">Documentation</h1>
+                    <p class="docs-subtitle">
+                        Comprehensive guide to building, deploying, and managing intelligent electronics with the Valtronics platform.
+                    </p>
+                    
+                    <div class="owner-info">
+                        <p><strong>Owner:</strong> Robert Trenaman</p>
+                        <p><strong>Company:</strong> Software Customs Auto Bot Solution</p>
+                        <p><strong>Email:</strong> autobotsolution@gmail.com</p>
+                        <p><strong>Location:</strong> Flushing, Michigan, USA</p>
+                    </div>
+                </div>
+                
+                <!-- Getting Started Section -->
+                <section class="docs-section" id="getting-started">
+                    <h2 class="section-title">Getting Started</h2>
+                    <p class="section-content">
+                        Welcome to the Valtronics platform! This guide will help you get started with building intelligent electronics 
+                        and IoT solutions. Follow these steps to set up your development environment and create your first device.
+                    </p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3 class="feature-title">1. Setup Environment</h3>
+                            <p class="feature-description">
+                                Install the required development tools and dependencies for your target platform.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">2. Configure Device</h3>
+                            <p class="feature-description">
+                                Set up your device configuration and connect sensors to your hardware platform.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">3. Deploy Firmware</h3>
+                            <p class="feature-description">
+                                Build and flash the firmware to your device using our automated tools.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">4. Monitor Data</h3>
+                            <p class="feature-description">
+                                View real-time sensor data and analytics through our web dashboard.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Platform Overview Section -->
+                <section class="docs-section" id="platform-overview">
+                    <h2 class="section-title">Platform Overview</h2>
+                    <p class="section-content">
+                        The Valtronics platform consists of several integrated components that work together to provide 
+                        a complete IoT solution for intelligent electronics.
+                    </p>
+                    
+                    <div class="api-endpoint">
+                        <div class="endpoint-method endpoint-get">GET</div>
+                        <div class="endpoint-url">/api/v1/devices</div>
+                        <div class="endpoint-description">
+                            Retrieve a list of all registered devices and their current status.
+                        </div>
+                    </div>
+                    
+                    <div class="api-endpoint">
+                        <div class="endpoint-method endpoint-post">POST</div>
+                        <div class="endpoint-url">/api/v1/devices</div>
+                        <div class="endpoint-description">
+                            Register a new device with the platform and receive a unique device ID.
+                        </div>
+                    </div>
+                    
+                    <div class="api-endpoint">
+                        <div class="endpoint-method endpoint-get">GET</div>
+                        <div class="endpoint-url">/api/v1/telemetry/{device_id}</div>
+                        <div class="endpoint-description">
+                            Get real-time telemetry data for a specific device.
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Firmware Development Section -->
+                <section class="docs-section" id="firmware-development">
+                    <h2 class="section-title">Firmware Development</h2>
+                    <p class="section-content">
+                        Valtronics supports multiple hardware platforms with a unified firmware development experience. 
+                        Our firmware stack provides abstractions for sensors, communication protocols, and device management.
+                    </p>
+                    
+                    <div class="code-block">
+<pre>
+#include "valtronics.h"
+#include "sensors/temperature.h"
+#include "communication/mqtt.h"
+
+void setup() {
+    // Initialize Valtronics platform
+    valtronics_init();
+    
+    // Setup temperature sensor
+    temperature_sensor_init();
+    
+    // Connect to MQTT broker
+    mqtt_connect("broker.valtronics.com", 1883);
+}
+
+void loop() {
+    // Read sensor data
+    float temp = temperature_read();
+    
+    // Publish telemetry
+    mqtt_publish_telemetry("temperature", temp);
+    
+    delay(1000);
+}
+</pre>
+                    </div>
+                </section>
+                
+                <!-- API Reference Section -->
+                <section class="docs-section" id="api-reference">
+                    <h2 class="section-title">API Reference</h2>
+                    <p class="section-content">
+                        The Valtronics REST API provides comprehensive endpoints for device management, telemetry data, 
+                        analytics, and system configuration. All API endpoints use JSON format and support HTTP/HTTPS.
+                    </p>
+                    
+                    <div class="api-endpoint">
+                        <div class="endpoint-method endpoint-get">GET</div>
+                        <div class="endpoint-url">/api/v1/analytics/summary</div>
+                        <div class="endpoint-description">
+                            Get analytics summary for all devices including performance metrics and insights.
+                        </div>
+                    </div>
+                    
+                    <div class="api-endpoint">
+                        <div class="endpoint-method endpoint-post">POST</div>
+                        <div class="endpoint-url">/api/v1/alerts</div>
+                        <div class="endpoint-description">
+                            Create a new alert rule for monitoring device conditions and thresholds.
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Sensor Integration Section -->
+                <section class="docs-section" id="sensor-integration">
+                    <h2 class="section-title">Sensor Integration</h2>
+                    <p class="section-content">
+                        Valtronics supports a wide range of sensors through our unified sensor abstraction layer. 
+                        Each sensor type provides standardized interfaces for configuration, calibration, and data reading.
+                    </p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3 class="feature-title">Environmental Sensors</h3>
+                            <p class="feature-description">
+                                Temperature, humidity, pressure, air quality, and environmental monitoring sensors.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Industrial Sensors</h3>
+                            <p class="feature-description">
+                                Vibration, current, voltage, power monitoring, and industrial control sensors.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Motion Sensors</h3>
+                            <p class="feature-description">
+                                Accelerometers, gyroscopes, magnetometers, and motion detection sensors.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Custom Sensors</h3>
+                            <p class="feature-description">
+                                Extensible framework for adding custom sensor types and protocols.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Deployment Section -->
+                <section class="docs-section" id="deployment">
+                    <h2 class="section-title">Deployment</h2>
+                    <p class="section-content">
+                        Deploy Valtronics in various environments from edge devices to cloud infrastructure. 
+                        Our platform supports multiple deployment scenarios with automated scaling and monitoring.
+                    </p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3 class="feature-title">Edge Deployment</h3>
+                            <p class="feature-description">
+                                Deploy on edge devices and gateways for local processing and reduced latency.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Cloud Deployment</h3>
+                            <p class="feature-description">
+                                Cloud-native deployment with auto-scaling and high availability.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Hybrid Deployment</h3>
+                            <p class="feature-description">
+                                Combine edge and cloud deployment for optimal performance and cost.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">On-Premises</h3>
+                            <p class="feature-description">
+                                Deploy on-premises infrastructure for maximum security and control.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Troubleshooting Section -->
+                <section class="docs-section" id="troubleshooting">
+                    <h2 class="section-title">Troubleshooting</h2>
+                    <p class="section-content">
+                        Common issues and solutions for Valtronics platform deployment and operation. 
+                        Use these guides to diagnose and resolve problems quickly.
+                    </p>
+                    
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <h3 class="feature-title">Connection Issues</h3>
+                            <p class="feature-description">
+                                Troubleshoot MQTT, HTTP, and WebSocket connectivity problems.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Sensor Problems</h3>
+                            <p class="feature-description">
+                                Diagnose sensor calibration, reading errors, and hardware issues.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Performance Issues</h3>
+                            <p class="feature-description">
+                                Optimize system performance and resolve bottlenecks.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">Debug Tools</h3>
+                            <p class="feature-description">
+                                Use built-in debugging tools and logging for troubleshooting.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+                
+                            </main>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="firmware.html">Firmware</a>
+                <a href="api.html">API Reference</a>
+                <a href="examples.html">Examples</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <p class="footer-text">
+                © 2024 Valtronics. The Future of Intelligent Electronics.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Smooth scrolling for sidebar navigation
+        document.querySelectorAll('.sidebar-nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                    // Update active state
+                    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                }
+            });
+        });
+        
+        // Update active navigation based on scroll position
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.docs-section');
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

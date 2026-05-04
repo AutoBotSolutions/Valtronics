@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valtronics - The Future of Intelligent Electronics</title>
+    <meta name="description" content="Valtronics: Advanced IoT platform for intelligent electronics, firmware development, and real-time monitoring solutions">
+    <meta name="keywords" content="IoT, firmware, electronics, sensors, monitoring, real-time, embedded systems">
+    <meta name="author" content="Valtronics">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Valtronics - The Future of Intelligent Electronics">
+    <meta property="og:description" content="Advanced IoT platform for intelligent electronics and firmware development">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://valtronics.github.io">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap');
+        
+        :root {
+            --primary-color: #00ffff;
+            --secondary-color: #ff00ff;
+            --accent-color: #00ff00;
+            --gold-color: #ffd700;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --light-bg: #1a1a2e;
+            --text-primary: #ffffff;
+            --text-secondary: #b8b8c8;
+            --neon-glow: 0 0 20px rgba(0, 255, 255, 0.5);
+            --matrix-green: #00ff41;
+            --profit-glow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(-20px, -20px) scale(1.1); }
+            66% { transform: translate(20px, -20px) scale(0.9); }
+        }
+        
+        /* Matrix Rain Effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.1;
+        }
+        
+        .matrix-char {
+            position: absolute;
+            color: var(--matrix-green);
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-glow);
+            animation: logoGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes logoGlow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.2); }
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--primary-color);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+        
+        .hero-content {
+            max-width: 1200px;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes textGlow {
+            from { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+            to { text-shadow: 0 0 40px rgba(255, 0, 255, 0.8); }
+        }
+        
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-button {
+            padding: 1rem 2rem;
+            border: 2px solid var(--primary-color);
+            background: transparent;
+            color: var(--primary-color);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-color);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+        
+        .cta-button:hover::before {
+            left: 0;
+        }
+        
+        .cta-button:hover {
+            color: var(--dark-bg);
+            box-shadow: var(--neon-glow);
+            transform: translateY(-2px);
+        }
+        
+        .cta-button.secondary {
+            border-color: var(--secondary-color);
+            color: var(--secondary-color);
+        }
+        
+        .cta-button.secondary::before {
+            background: var(--secondary-color);
+        }
+        
+        .cta-button.secondary:hover {
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            text-shadow: var(--neon-glow);
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .feature-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            padding: 2rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .feature-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Stats Section */
+        .stats {
+            padding: 4rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+        }
+        
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .stat-number {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: var(--gold-color);
+            text-shadow: var(--profit-glow);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            background: var(--darker-bg);
+            border-top: 1px solid rgba(0, 255, 255, 0.3);
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .footer-text {
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+        
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0, 255, 255, 0.3);
+            border-top: 3px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Investor Thesis Section */
+        .investors {
+            padding: 5rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .investors-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-description {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .thesis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .thesis-card {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 10px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .thesis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--gold-color), var(--secondary-color));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .thesis-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .thesis-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+            border-color: rgba(255, 215, 0, 0.5);
+        }
+        
+        .thesis-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--gold-color);
+            text-shadow: var(--profit-glow);
+        }
+        
+        .thesis-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+        
+        .thesis-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .thesis-actions {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 215, 0, 0.1);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        
+        .thesis-subtitle {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--gold-color);
+            margin-bottom: 2rem;
+            text-shadow: var(--profit-glow);
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons .cta-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Matrix Rain Effect -->
+    <div class="matrix-rain" id="matrixRain"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">VALTRONICS</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="docs.html">Documentation</a></li>
+                <li><a href="firmware.html">Firmware</a></li>
+                <li><a href="api.html">API</a></li>
+                <li><a href="examples.html">Examples</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>VALTRONICS</h1>
+            <p class="hero-subtitle">The Future of Intelligent Electronics</p>
+            <p class="hero-description">
+                Advanced IoT platform for intelligent electronics, firmware development, and real-time monitoring solutions. 
+                Build, deploy, and scale your next-generation embedded systems with our comprehensive platform.
+            </p>
+            <div class="cta-buttons">
+                <a href="#features" class="cta-button">Explore Features</a>
+                <a href="docs.html" class="cta-button secondary">Get Started</a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <h2 class="section-title">Platform Capabilities</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚙</div>
+                <h3 class="feature-title">Complete Firmware Stack</h3>
+                <p class="feature-description">
+                    Production-ready firmware for ESP32, Arduino, and STM32 platforms with comprehensive 
+                    sensor support and communication protocols.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📉</div>
+                <h3 class="feature-title">Real-time Analytics</h3>
+                <p class="feature-description">
+                    Advanced analytics engine with AI-powered insights, predictive maintenance, 
+                    and anomaly detection for intelligent monitoring.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📉</div>
+                <h3 class="feature-title">Enterprise Security</h3>
+                <p class="feature-description">
+                    End-to-end security with TLS encryption, secure boot, and industrial-grade 
+                    authentication protocols.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📉</div>
+                <h3 class="feature-title">Rapid Development</h3>
+                <p class="feature-description">
+                    Complete development ecosystem with automated testing, CI/CD pipelines, 
+                    and comprehensive documentation.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📉</div>
+                <h3 class="feature-title">Multi-Protocol Support</h3>
+                <p class="feature-description">
+                    MQTT, HTTP/HTTPS, Modbus, LoRa, and CAN bus protocols for seamless 
+                    integration with existing systems.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📉</div>
+                <h3 class="feature-title">Modern Dashboard</h3>
+                <p class="feature-description">
+                    React-based real-time dashboard with WebSocket communication, 
+                    responsive design, and intuitive user interface.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">Lines of Code</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">15+</div>
+                <div class="stat-label">Sensor Types</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Hardware Platforms</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Test Coverage</div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Investor Thesis Section -->
+    <section class="investors" id="investors">
+        <div class="investors-container">
+            <h2 class="section-title">Investor Thesis</h2>
+            <p class="section-description">
+                Valtronics represents a transformative opportunity in the intelligent electronics market. 
+                Our comprehensive IoT platform addresses critical industry needs with cutting-edge technology 
+                and scalable solutions.
+            </p>
+            
+            <div class="thesis-grid">
+                <div class="thesis-card">
+                    <div class="thesis-icon">📉</div>
+                    <h3 class="thesis-title">Market Opportunity</h3>
+                    <p class="thesis-description">
+                        The global IoT market is projected to reach $1.5 trillion by 2027, with intelligent electronics 
+                        representing the fastest-growing segment. Valtronics is positioned to capture significant market share 
+                        through our comprehensive platform approach.
+                    </p>
+                </div>
+                
+                <div class="thesis-card">
+                    <div class="thesis-icon">📉</div>
+                    <h3 class="thesis-title">Competitive Advantage</h3>
+                    <p class="thesis-description">
+                        Our unified firmware stack, multi-platform support, and advanced analytics create a powerful 
+                        moat. Valtronics delivers end-to-end solutions that competitors cannot match in scope or performance.
+                    </p>
+                </div>
+                
+                <div class="thesis-card">
+                    <div class="thesis-icon">💰</div>
+                    <h3 class="thesis-title">Revenue Model</h3>
+                    <p class="thesis-description">
+                        Diversified revenue streams including platform licensing, enterprise support, firmware development 
+                        services, and premium analytics. Scalable SaaS model with high-margin recurring revenue.
+                    </p>
+                </div>
+                
+                <div class="thesis-card">
+                    <div class="thesis-icon">📉</div>
+                    <h3 class="thesis-title">Strategic Vision</h3>
+                    <p class="thesis-description">
+                        Building the definitive platform for intelligent electronics, from prototype to production. 
+                        Our roadmap includes AI-powered automation, advanced edge computing, and global ecosystem expansion.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="thesis-actions">
+                <h3 class="thesis-subtitle">Investment Opportunities</h3>
+                <div class="action-buttons">
+                    <a href="valtronics-investor-thesis.html" class="cta-button" target="_blank">
+                        <span>📉</span>
+                        <span>Investor Thesis</span>
+                    </a>
+                    <a href="valtronics-laymans-thesis.html" class="cta-button secondary" target="_blank">
+                        <span>📉</span>
+                        <span>Layman's Thesis</span>
+                    </a>
+                    <a href="valtronics-project-thesis.html" class="cta-button" target="_blank">
+                        <span>📉</span>
+                        <span>Project Thesis</span>
+                    </a>
+                    <a href="#contact" class="cta-button secondary">
+                        <span>📉</span>
+                        <span>Schedule Meeting</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html">Documentation</a>
+                <a href="firmware.html">Firmware</a>
+                <a href="api.html">API Reference</a>
+                <a href="examples.html">Examples</a>
+                <a href="contact.html">Contact</a>
+            </div>
+            <p class="footer-text">
+                © 2024 Valtronics. The Future of Intelligent Electronics.
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const matrixRain = document.getElementById('matrixRain');
+            const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%^&*()';
+            const columns = Math.floor(window.innerWidth / 20);
+            
+            for (let i = 0; i < columns; i++) {
+                const char = document.createElement('div');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.left = i * 20 + 'px';
+                char.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                char.style.animationDelay = Math.random() * 2 + 's';
+                matrixRain.appendChild(char);
+            }
+        }
+        
+        // Smooth Scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Loading Screen
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1000);
+        });
+        
+        // Initialize Effects
+        createMatrixRain();
+        
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero');
+            if (parallax) {
+                parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+            }
+        });
+        
+        // Dynamic Stats Animation
+        function animateStats() {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = stat.textContent;
+                const isPercentage = target.includes('%');
+                const isPlus = target.includes('+');
+                const number = parseInt(target.replace(/[^0-9]/g, ''));
+                
+                let current = 0;
+                const increment = number / 50;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= number) {
+                        current = number;
+                        clearInterval(timer);
+                    }
+                    stat.textContent = Math.floor(current) + (isPercentage ? '%' : '') + (isPlus ? '+' : '');
+                }, 30);
+            });
+        }
+        
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.classList.contains('stats')) {
+                        animateStats();
+                        observer.unobserve(entry.target);
+                    }
+                }
+            });
+        });
+        
+        const statsSection = document.querySelector('.stats');
+        if (statsSection) {
+            observer.observe(statsSection);
+        }
+    </script>
+</body>
+</html>
