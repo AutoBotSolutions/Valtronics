@@ -4,6 +4,8 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+    # Temporarily disabled - requires AWS credentials configuration
+    # To enable, configure AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY secrets
 
 env:
   REGISTRY: ghcr.io
@@ -13,6 +15,7 @@ jobs:
   deploy-staging:
     runs-on: ubuntu-latest
     environment: staging
+    if: false # Temporarily disabled - requires AWS credentials configuration
     
     steps:
     - name: Checkout code
@@ -78,6 +81,7 @@ jobs:
     needs: deploy-staging
     runs-on: ubuntu-latest
     environment: production
+    if: false # Temporarily disabled - requires AWS credentials configuration
     
     steps:
     - name: Checkout code
@@ -184,6 +188,7 @@ jobs:
     runs-on: ubuntu-latest
     if: failure() && github.ref == 'refs/heads/main'
     environment: production
+    if: false # Temporarily disabled - requires AWS credentials configuration
     
     steps:
     - name: Configure AWS credentials
