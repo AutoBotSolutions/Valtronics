@@ -431,6 +431,84 @@ For support and questions:
 - [Docker Documentation](https://docs.docker.com/)
 - [Kubernetes Documentation](https://kubernetes.io/docs/)
 
+## 🌐 GitHub & Deployment
+
+### Repository Structure
+This repository is organized for both development and deployment:
+
+- **Main Project**: Complete IoT platform with backend, frontend, and infrastructure
+- **Static Website**: `site/` directory contains the GitHub Pages website
+- **Documentation**: Comprehensive docs in `docs/` directory
+- **Firmware**: Embedded firmware development in `firmware/` directory
+
+### GitHub Pages
+The project includes a static website deployed via GitHub Pages:
+
+- **Website URL**: `https://valtronics.github.io/valtronics/`
+- **Source**: `site/` directory
+- **Auto-deployment**: Automatic deployment on push to main branch
+- **Build Process**: GitHub Actions workflow handles deployment
+
+### Quick GitHub Setup
+
+1. **Create GitHub Repository**
+   ```bash
+   # Create a new repository on GitHub named "valtronics"
+   # Then add the remote:
+   git remote add origin https://github.com/your-username/valtronics.git
+   ```
+
+2. **Push to GitHub**
+   ```bash
+   git push -u origin main
+   ```
+
+3. **Enable GitHub Pages**
+   - Go to repository Settings → Pages
+   - Source: Deploy from a branch
+   - Branch: main
+   - Folder: /(root)
+   - Save settings
+
+4. **Enable GitHub Actions**
+   - Go to repository Settings → Actions → General
+   - Allow all actions and reusable workflows
+   - Save settings
+
+### Development Workflow
+
+```bash
+# Clone the repository
+git clone https://github.com/your-username/valtronics.git
+cd valtronics
+
+# Start development environment
+./start-dev.sh
+
+# Make changes and commit
+git add .
+git commit -m "Your changes"
+git push origin main
+```
+
+### CI/CD Pipeline
+
+The project includes automated workflows:
+
+- **GitHub Pages Deployment**: Automatic website deployment
+- **Testing**: Automated backend and frontend tests
+- **Code Quality**: Linting and formatting checks
+- **Security**: Dependency vulnerability scanning
+
+### Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature-name`
+3. Make your changes
+4. Commit your changes: `git commit -m 'Add feature'`
+5. Push to branch: `git push origin feature-name`
+6. Create a Pull Request
+
 ---
 
 **Valtronics** - Building the future of intelligent electronics monitoring and control. 🚀
