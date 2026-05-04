@@ -1,0 +1,33 @@
+{
+  "mqtt": {
+    "broker_host": "localhost",
+    "broker_port": 1883,
+    "username": "valtronics_user",
+    "password": "valtronics_password",
+    "keepalive": 60,
+    "qos": 1
+  },
+  "api": {
+    "base_url": "http://localhost:8000",
+    "timeout": 30,
+    "retry_attempts": 3,
+    "retry_delay": 5
+  },
+  "device": {
+    "telemetry_interval": 30,
+    "health_check_interval": 300,
+    "batch_size": 10,
+    "max_retries": 3
+  },
+  "simulation": {
+    "noise_level": 0.1,
+    "drift_rate": 0.01,
+    "failure_probability": 0.02,
+    "alert_probability": 0.05
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "rich",
+    "file": "mock_devices.log"
+  }
+}

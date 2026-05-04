@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valtronics-backend
+  labels:
+    app: valtronics-backend
+    component: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: valtronics-backend
+  template:
+    metadata:
+      labels:
+        app: valtronics-backend
+        component: backend
+    spec:
+      containers:
+      - name: backend
+        image: valtronics/backend:latest
+        ports:
+        - containerPort: 8000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: valtronics-secrets
+              key: database-url
+        - name: REDIS_URL
+          value: "redis://valtronics-redis:6379"
+        - name: MQTT_BROKER_HOST
+          value: "valtronics-mqtt"
+        - name: MQTT_BROKER_PORT
+          value: "1883"
+        - name: OPENAI_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: valtronics-secrets
+              key: openai-api-key
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/v1/health/ping
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /api/v1/health/
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: logs
+          mountPath: /app/logs
+      volumes:
+      - name: logs
+        emptyDir: {}
+      imagePullSecrets:
+      - name: registry-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valtronics-backend
+  labels:
+    app: valtronics-backend
+    component: backend
+spec:
+  selector:
+    app: valtronics-backend
+  ports:
+  - name: http
+    port: 8000
+    targetPort: 8000
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: valtronics-backend-hpa
+  labels:
+    app: valtronics-backend
+    component: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: valtronics-backend
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80

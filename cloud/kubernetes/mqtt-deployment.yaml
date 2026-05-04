@@ -1,0 +1,177 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: valtronics-mqtt
+  labels:
+    app: valtronics-mqtt
+    component: mqtt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: valtronics-mqtt
+  template:
+    metadata:
+      labels:
+        app: valtronics-mqtt
+        component: mqtt
+    spec:
+      containers:
+      - name: mosquitto
+        image: eclipse-mosquitto:2.0
+        ports:
+        - containerPort: 1883
+        - containerPort: 9001
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "200m"
+        livenessProbe:
+          exec:
+            command:
+            - mosquitto_pub
+            - -h
+            - localhost
+            - -t
+            - test
+            - -m
+            - healthcheck
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - mosquitto_pub
+            - -h
+            - localhost
+            - -t
+            - test
+            - -m
+            - readycheck
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: mosquitto-data
+          mountPath: /mosquitto/data
+        - name: mosquitto-logs
+          mountPath: /mosquitto/log
+        - name: mosquitto-config
+          mountPath: /mosquitto/config/mosquitto.conf
+          subPath: mosquitto.conf
+      volumes:
+      - name: mosquitto-data
+        persistentVolumeClaim:
+          claimName: mosquitto-data-pvc
+      - name: mosquitto-logs
+        persistentVolumeClaim:
+          claimName: mosquitto-logs-pvc
+      - name: mosquitto-config
+        configMap:
+          name: mosquitto-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: valtronics-mqtt
+  labels:
+    app: valtronics-mqtt
+    component: mqtt
+spec:
+  selector:
+    app: valtronics-mqtt
+  ports:
+  - name: mqtt
+    port: 1883
+    targetPort: 1883
+    protocol: TCP
+  - name: websocket
+    port: 9001
+    targetPort: 9001
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-data-pvc
+  labels:
+    app: valtronics-mqtt
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mosquitto-logs-pvc
+  labels:
+    app: valtronics-mqtt
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 512Mi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mosquitto-config
+data:
+  mosquitto.conf: |
+    # Mosquitto Configuration
+    
+    # Basic settings
+    pid_file /var/run/mosquitto.pid
+    persistence true
+    persistence_location /mosquitto/data/
+    log_dest file /mosquitto/log/mosquitto.log
+    log_dest stdout
+    
+    # Logging
+    log_type error
+    log_type warning
+    log_type notice
+    log_type information
+    log_timestamp true
+    
+    # Connection settings
+    port 1883
+    max_inflight_messages 20
+    max_queued_messages 100
+    message_size_limit 0
+    
+    # WebSocket support
+    listener 9001
+    protocol websockets
+    
+    # Security
+    allow_anonymous true
+    
+    # Persistence
+    autosave_interval 1800
+    autosave_on_changes false
+    persistence_file mosquitto.db
+    
+    # Connection logging
+    log_timestamp true
+    log_timestamp_format %Y-%m-%dT%H:%M:%S
+    
+    # Client settings
+    max_connections 1000
+    max_client_id_length 65535
+    
+    # Keepalive
+    keepalive_interval 60
+    
+    # Rate limiting
+    max_packet_size 0
+    max_keepalive 65535

@@ -1,0 +1,669 @@
+{
+  "test_suites": [
+    {
+      "name": "unit_tests",
+      "description": "Unit tests for individual firmware components",
+      "test_cases": [
+        {
+          "name": "temperature_sensor_init",
+          "description": "Test temperature sensor initialization",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 60,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_temperature_sensor_init"],
+          "expected_results": {
+            "return_code": 0,
+            "test_count": 1
+          },
+          "metrics": [
+            {
+              "name": "execution_time",
+              "unit": "seconds",
+              "threshold": 30.0
+            },
+            {
+              "name": "memory_usage",
+              "unit": "bytes",
+              "threshold": 50000
+            }
+          ]
+        },
+        {
+          "name": "humidity_sensor_init",
+          "description": "Test humidity sensor initialization",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 60,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_humidity_sensor_init"],
+          "expected_results": {
+            "return_code": 0,
+            "test_count": 1
+          },
+          "metrics": [
+            {
+              "name": "execution_time",
+              "unit": "seconds",
+              "threshold": 30.0
+            },
+            {
+              "name": "memory_usage",
+              "unit": "bytes",
+              "threshold": 50000
+            }
+          ]
+        },
+        {
+          "name": "pressure_sensor_init",
+          "description": "Test pressure sensor initialization",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 60,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_pressure_sensor_init"],
+          "expected_results": {
+            "return_code": 0,
+            "test_count": 1
+          },
+          "metrics": [
+            {
+              "name": "execution_time",
+              "unit": "seconds",
+              "threshold": 30.0
+            },
+            {
+              "name": "memory_usage",
+              "unit": "bytes",
+              "threshold": 50000
+            }
+          ]
+        },
+        {
+          "name": "mqtt_client_connection",
+          "description": "Test MQTT client connection",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 120,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_mqtt_client_connection"],
+          "expected_results": {
+            "return_code": 0,
+            "connection_successful": true
+          },
+          "metrics": [
+            {
+              "name": "connection_time",
+              "unit": "seconds",
+              "threshold": 30.0
+            }
+          ]
+        },
+        {
+          "name": "data_fusion_accuracy",
+          "description": "Test data fusion accuracy",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 90,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_data_fusion_accuracy"],
+          "expected_results": {
+            "return_code": 0,
+            "fusion_accuracy": 0.95
+          },
+          "metrics": [
+            {
+              "name": "fusion_accuracy",
+              "unit": "percentage",
+              "threshold": 0.90
+            }
+          ]
+        },
+        {
+          "name": "json_utils_serialization",
+          "description": "Test JSON utilities serialization",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 45,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_json_utils_serialization"],
+          "expected_results": {
+            "return_code": 0,
+            "serialization_tests": 5
+          },
+          "metrics": [
+            {
+              "name": "serialization_time",
+              "unit": "milliseconds",
+              "threshold": 100.0
+            }
+          ]
+        },
+        {
+          "name": "logger_functionality",
+          "description": "Test logger functionality",
+          "category": "unit",
+          "platform": "esp32",
+          "timeout": 30,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_logger_functionality"],
+          "expected_results": {
+            "return_code": 0,
+            "log_levels_tested": 4
+          },
+          "metrics": [
+            {
+              "name": "log_performance",
+              "unit": "messages_per_second",
+              "threshold": 1000.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "integration_tests",
+      "description": "Integration tests for component interaction",
+      "test_cases": [
+        {
+          "name": "sensor_to_mqtt_integration",
+          "description": "Test sensor data to MQTT integration",
+          "category": "integration",
+          "platform": "esp32",
+          "timeout": 180,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_sensor_to_mqtt_integration"],
+          "expected_results": {
+            "return_code": 0,
+            "data_transmitted": true
+          },
+          "metrics": [
+            {
+              "name": "end_to_end_latency",
+              "unit": "milliseconds",
+              "threshold": 1000.0
+            }
+          ]
+        },
+        {
+          "name": "multi_sensor_coordination",
+          "description": "Test multi-sensor coordination",
+          "category": "integration",
+          "platform": "esp32",
+          "timeout": 240,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_multi_sensor_coordination"],
+          "expected_results": {
+            "return_code": 0,
+            "all_sensors_active": true
+          },
+          "metrics": [
+            {
+              "name": "sensor_sync_time",
+              "unit": "milliseconds",
+              "threshold": 500.0
+            }
+          ]
+        },
+        {
+          "name": "sensor_fusion_integration",
+          "description": "Test sensor fusion integration",
+          "category": "integration",
+          "platform": "esp32",
+          "timeout": 200,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_sensor_fusion_integration"],
+          "expected_results": {
+            "return_code": 0,
+            "fusion_successful": true
+          },
+          "metrics": [
+            {
+              "name": "fusion_processing_time",
+              "unit": "milliseconds",
+              "threshold": 200.0
+            }
+          ]
+        },
+        {
+          "name": "config_manager_integration",
+          "description": "Test configuration manager integration",
+          "category": "integration",
+          "platform": "esp32",
+          "timeout": 120,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_config_manager_integration"],
+          "expected_results": {
+            "return_code": 0,
+            "config_loaded": true
+          },
+          "metrics": [
+            {
+              "name": "config_load_time",
+              "unit": "milliseconds",
+              "threshold": 500.0
+            }
+          ]
+        },
+        {
+          "name": "alert_system_integration",
+          "description": "Test alert system integration",
+          "category": "integration",
+          "platform": "esp32",
+          "timeout": 150,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_alert_system_integration"],
+          "expected_results": {
+            "return_code": 0,
+            "alerts_triggered": true
+          },
+          "metrics": [
+            {
+              "name": "alert_response_time",
+              "unit": "milliseconds",
+              "threshold": 100.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "hardware_tests",
+      "description": "Hardware tests with actual devices",
+      "test_cases": [
+        {
+          "name": "sensor_hardware_validation",
+          "description": "Validate sensor hardware communication",
+          "category": "hardware",
+          "platform": "esp32",
+          "timeout": 300,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_sensor_hardware_validation"],
+          "expected_results": {
+            "return_code": 0,
+            "hardware_connected": true
+          },
+          "metrics": [
+            {
+              "name": "sensor_response_time",
+              "unit": "milliseconds",
+              "threshold": 100.0
+            }
+          ]
+        },
+        {
+          "name": "i2c_bus_communication",
+          "description": "Test I2C bus communication",
+          "category": "hardware",
+          "platform": "esp32",
+          "timeout": 180,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_i2c_bus_communication"],
+          "expected_results": {
+            "return_code": 0,
+            "i2c_devices_found": true
+          },
+          "metrics": [
+            {
+              "name": "i2c_scan_time",
+              "unit": "milliseconds",
+              "threshold": 1000.0
+            }
+          ]
+        },
+        {
+          "name": "uart_communication",
+          "description": "Test UART communication",
+          "category": "hardware",
+          "platform": "esp32",
+          "timeout": 150,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_uart_communication"],
+          "expected_results": {
+            "return_code": 0,
+            "uart_communication_ok": true
+          },
+          "metrics": [
+            {
+              "name": "uart_baud_rate",
+              "unit": "bps",
+              "threshold": 9600.0
+            }
+          ]
+        },
+        {
+          "name": "gpio_functionality",
+          "description": "Test GPIO functionality",
+          "category": "hardware",
+          "platform": "esp32",
+          "timeout": 120,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_gpio_functionality"],
+          "expected_results": {
+            "return_code": 0,
+            "gpio_operations_successful": true
+          },
+          "metrics": [
+            {
+              "name": "gpio_switch_time",
+              "unit": "microseconds",
+              "threshold": 50.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "performance_tests",
+      "description": "Performance and memory tests",
+      "test_cases": [
+        {
+          "name": "memory_usage_benchmark",
+          "description": "Benchmark memory usage",
+          "category": "performance",
+          "platform": "esp32",
+          "timeout": 180,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_memory_usage_benchmark"],
+          "expected_results": {
+            "return_code": 0
+          },
+          "metrics": [
+            {
+              "name": "peak_memory_usage",
+              "unit": "bytes",
+              "threshold": 100000
+            },
+            {
+              "name": "memory_leaks",
+              "unit": "count",
+              "threshold": 0
+            }
+          ]
+        },
+        {
+          "name": "cpu_performance_benchmark",
+          "description": "Benchmark CPU performance",
+          "category": "performance",
+          "platform": "esp32",
+          "timeout": 240,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_cpu_performance_benchmark"],
+          "expected_results": {
+            "return_code": 0
+          },
+          "metrics": [
+            {
+              "name": "cpu_utilization",
+              "unit": "percentage",
+              "threshold": 80.0
+            },
+            {
+              "name": "response_time",
+              "unit": "milliseconds",
+              "threshold": 100.0
+            }
+          ]
+        },
+        {
+          "name": "sensor_reading_performance",
+          "description": "Benchmark sensor reading performance",
+          "category": "performance",
+          "platform": "esp32",
+          "timeout": 120,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_sensor_reading_performance"],
+          "expected_results": {
+            "return_code": 0
+          },
+          "metrics": [
+            {
+              "name": "sensor_read_rate",
+              "unit": "readings_per_second",
+              "threshold": 10.0
+            },
+            {
+              "name": "sensor_read_latency",
+              "unit": "milliseconds",
+              "threshold": 50.0
+            }
+          ]
+        },
+        {
+          "name": "mqtt_throughput_test",
+          "description": "Test MQTT throughput",
+          "category": "performance",
+          "platform": "esp32",
+          "timeout": 300,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_mqtt_throughput_test"],
+          "expected_results": {
+            "return_code": 0
+          },
+          "metrics": [
+            {
+              "name": "mqtt_messages_per_second",
+              "unit": "messages",
+              "threshold": 10.0
+            },
+            {
+              "name": "mqtt_message_size",
+              "unit": "bytes",
+              "threshold": 1024.0
+            }
+          ]
+        },
+        {
+          "name": "json_processing_performance",
+          "description": "Benchmark JSON processing performance",
+          "category": "performance",
+          "platform": "esp32",
+          "timeout": 150,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_json_processing_performance"],
+          "expected_results": {
+            "return_code": 0
+          },
+          "metrics": [
+            {
+              "name": "json_parse_time",
+              "unit": "milliseconds",
+              "threshold": 50.0
+            },
+            {
+              "name": "json_serialize_time",
+              "unit": "milliseconds",
+              "threshold": 30.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stress_tests",
+      "description": "Stress tests for system stability",
+      "test_cases": [
+        {
+          "name": "long_running_stability",
+          "description": "Test long-running stability",
+          "category": "stress",
+          "platform": "esp32",
+          "timeout": 1800,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_long_running_stability"],
+          "expected_results": {
+            "return_code": 0,
+            "stability_duration": 1800
+          },
+          "metrics": [
+            {
+              "name": "system_uptime",
+              "unit": "seconds",
+              "threshold": 1800.0
+            },
+            {
+              "name": "error_count",
+              "unit": "count",
+              "threshold": 5
+            }
+          ]
+        },
+        {
+          "name": "memory_fragmentation_test",
+          "description": "Test memory fragmentation",
+          "category": "stress",
+          "platform": "esp32",
+          "timeout": 600,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_memory_fragmentation_test"],
+          "expected_results": {
+            "return_code": 0
+          },
+          "metrics": [
+            {
+              "name": "fragmentation_level",
+              "unit": "percentage",
+              "threshold": 20.0
+            },
+            {
+              "name": "largest_free_block",
+              "unit": "bytes",
+              "threshold": 50000
+            }
+          ]
+        },
+        {
+          "name": "sensor_failure_recovery",
+          "description": "Test sensor failure recovery",
+          "category": "stress",
+          "platform": "esp32",
+          "timeout": 300,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_sensor_failure_recovery"],
+          "expected_results": {
+            "return_code": 0,
+            "recovery_successful": true
+          },
+          "metrics": [
+            {
+              "name": "recovery_time",
+              "unit": "seconds",
+              "threshold": 10.0
+            },
+            {
+              "name": "failure_count",
+              "unit": "count",
+              "threshold": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "regression_tests",
+      "description": "Regression tests for bug fixes",
+      "test_cases": [
+        {
+          "name": "known_issues_regression",
+          "description": "Test known issues regression",
+          "category": "regression",
+          "platform": "esp32",
+          "timeout": 200,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_known_issues_regression"],
+          "expected_results": {
+            "return_code": 0,
+            "issues_fixed": true
+          },
+          "metrics": [
+            {
+              "name": "regression_test_count",
+              "unit": "count",
+              "threshold": 10
+            }
+          ]
+        },
+        {
+          "name": "api_compatibility_regression",
+          "description": "Test API compatibility",
+          "category": "regression",
+          "platform": "esp32",
+          "timeout": 150,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_api_compatibility_regression"],
+          "expected_results": {
+            "return_code": 0,
+            "api_compatible": true
+          },
+          "metrics": [
+            {
+              "name": "api_methods_tested",
+              "unit": "count",
+              "threshold": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "security_tests",
+      "description": "Security and authentication tests",
+      "test_cases": [
+        {
+          "name": "mqtt_authentication",
+          "description": "Test MQTT authentication",
+          "category": "security",
+          "platform": "esp32",
+          "timeout": 120,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_mqtt_authentication"],
+          "expected_results": {
+            "return_code": 0,
+            "authentication_successful": true
+          },
+          "metrics": [
+            {
+              "name": "auth_time",
+              "unit": "seconds",
+              "threshold": 30.0
+            }
+          ]
+        },
+        {
+          "name": "data_encryption",
+          "description": "Test data encryption",
+          "category": "security",
+          "platform": "esp32",
+          "timeout": 100,
+          "setup_commands": ["pio run -e esp32 -t clean"],
+          "test_commands": ["pio test -e esp32 --filter test_data_encryption"],
+          "expected_results": {
+            "return_code": 0,
+            "encryption_working": true
+          },
+          "metrics": [
+            {
+              "name": "encryption_time",
+              "unit": "milliseconds",
+              "threshold": 100.0
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "test_configuration": {
+    "default_timeout": 300,
+    "parallel_execution": false,
+    "continue_on_failure": true,
+    "generate_reports": true,
+    "report_format": ["html", "json"],
+    "notification_channels": ["console", "file"],
+    "quality_gates": {
+      "minimum_success_rate": 95.0,
+      "maximum_failure_rate": 5.0,
+      "maximum_execution_time": 3600,
+      "maximum_memory_usage": 200000
+    }
+  }
+}

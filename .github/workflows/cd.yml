@@ -1,0 +1,222 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  deploy-staging:
+    runs-on: ubuntu-latest
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name valtronics-staging --region us-west-2
+
+    - name: Deploy to staging
+      run: |
+        # Update image tags in deployment files
+        sed -i "s|image: .*backend:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:${{ github.sha }}|g" cloud/kubernetes/backend-deployment.yaml
+        sed -i "s|image: .*frontend:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ github.sha }}|g" cloud/kubernetes/frontend-deployment.yaml
+        
+        # Apply deployments
+        kubectl apply -f cloud/kubernetes/secrets.yaml
+        kubectl apply -f cloud/kubernetes/postgres-deployment.yaml
+        kubectl apply -f cloud/kubernetes/redis-deployment.yaml
+        kubectl apply -f cloud/kubernetes/mqtt-deployment.yaml
+        kubectl apply -f cloud/kubernetes/backend-deployment.yaml
+        kubectl apply -f cloud/kubernetes/frontend-deployment.yaml
+        
+        # Wait for rollout
+        kubectl rollout status deployment/valtronics-backend
+        kubectl rollout status deployment/valtronics-frontend
+
+    - name: Run smoke tests
+      run: |
+        # Wait for services to be ready
+        sleep 60
+        
+        # Get service URL
+        SERVICE_URL=$(kubectl get ingress valtronics-ingress -o jsonpath='{.spec.rules[0].host}')
+        
+        # Run smoke tests
+        curl -f "http://$SERVICE_URL/api/v1/health/ping"
+        curl -f "http://$SERVICE_URL/"
+
+    - name: Notify Slack
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        channel: '#deployments'
+        text: '🚀 Staging deployment successful!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  deploy-production:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name valtronics-production --region us-west-2
+
+    - name: Create backup before deployment
+      run: |
+        # Create database backup
+        BACKUP_NAME="pre-deploy-$(date +%Y%m%d-%H%M%S)"
+        kubectl exec -n valtronics deployment/valtronics-postgres -- pg_dump -U valtronics valtronics_db > "backup-$BACKUP_NAME.sql"
+        
+        # Upload backup to S3
+        aws s3 cp "backup-$BACKUP_NAME.sql" "s3://valtronics-backups/database/"
+
+    - name: Deploy to production
+      run: |
+        # Update image tags
+        sed -i "s|image: .*backend:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/backend:${{ github.sha }}|g" cloud/kubernetes/backend-deployment.yaml
+        sed -i "s|image: .*frontend:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/frontend:${{ github.sha }}|g" cloud/kubernetes/frontend-deployment.yaml
+        
+        # Apply deployments with rolling update
+        kubectl apply -f cloud/kubernetes/backend-deployment.yaml
+        kubectl rollout status deployment/valtronics-backend --timeout=600s
+        
+        kubectl apply -f cloud/kubernetes/frontend-deployment.yaml
+        kubectl rollout status deployment/valtronics-frontend --timeout=600s
+
+    - name: Run health checks
+      run: |
+        # Wait for services to be ready
+        sleep 120
+        
+        # Get service URL
+        SERVICE_URL=$(kubectl get ingress valtronics-ingress -o jsonpath='{.spec.rules[0].host}')
+        
+        # Comprehensive health checks
+        echo "Testing API health..."
+        curl -f "http://$SERVICE_URL/api/v1/health/"
+        
+        echo "Testing frontend..."
+        curl -f "http://$SERVICE_URL/"
+        
+        echo "Testing WebSocket..."
+        curl -i -N \
+          -H "Connection: Upgrade" \
+          -H "Upgrade: websocket" \
+          -H "Sec-WebSocket-Key: test" \
+          -H "Sec-WebSocket-Version: 13" \
+          "http://$SERVICE_URL/ws"
+
+    - name: Run integration tests
+      run: |
+        SERVICE_URL=$(kubectl get ingress valtronics-ingress -o jsonpath='{.spec.rules[0].host}')
+        
+        # Run API tests
+        python -m pytest tests/integration/ --base-url="http://$SERVICE_URL" -v
+
+    - name: Update monitoring
+      run: |
+        # Update Prometheus targets
+        kubectl apply -f cloud/monitoring/prometheus-config.yaml
+        
+        # Update Grafana dashboards
+        kubectl apply -f cloud/monitoring/grafana-dashboards.yaml
+
+    - name: Notify Slack
+      if: success()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: success
+        channel: '#deployments'
+        text: '🎉 Production deployment successful!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: Notify on failure
+      if: failure()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: failure
+        channel: '#deployments'
+        text: '❌ Production deployment failed!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  rollback:
+    needs: deploy-production
+    runs-on: ubuntu-latest
+    if: failure() && github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --name valtronics-production --region us-west-2
+
+    - name: Rollback deployment
+      run: |
+        # Rollback to previous revision
+        kubectl rollout undo deployment/valtronics-backend
+        kubectl rollout undo deployment/valtronics-frontend
+        
+        # Wait for rollback
+        kubectl rollout status deployment/valtronics-backend
+        kubectl rollout status deployment/valtronics-frontend
+
+    - name: Notify rollback
+      uses: 8398a7/action-slack@v3
+      with:
+        status: custom
+        channel: '#deployments'
+        text: '🔄 Production deployment rolled back!'
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

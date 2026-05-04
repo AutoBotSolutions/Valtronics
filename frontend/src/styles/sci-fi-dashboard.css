@@ -1,0 +1,791 @@
+/* Valtronics Sci-Fi Dashboard Theme */
+/* Cutting-edge futuristic design with advanced animations and effects */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&family=Rajdhani:wght@400;500;700&display=swap');
+
+:root {
+  /* Investor Thesis Color Palette */
+  --primary-color: #00ffff;
+  --secondary-color: #ff00ff;
+  --accent-color: #00ff00;
+  --gold-color: #ffd700;
+  --dark-bg: #0a0a0f;
+  --darker-bg: #050508;
+  --light-bg: #1a1a2e;
+  --text-primary: #ffffff;
+  --text-secondary: #b8b8c8;
+  --neon-glow: 0 0 20px rgba(0, 255, 255, 0.5);
+  --matrix-green: #00ff41;
+  --profit-glow: 0 0 30px rgba(255, 215, 0, 0.6);
+  
+  /* Additional Dashboard Colors */
+  --cyber-warning: #ff6b35;
+  --cyber-danger: #ff0040;
+  --void-black: #000000;
+  --deep-space: #0a0a0f;
+  --midnight-blue: #0f0f23;
+  --quantum-purple: #1a1a2e;
+  --nebula-pink: #2d1b69;
+  
+  /* UI Colors */
+  --glass-white: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(0, 255, 255, 0.3);
+  --hologram-blue: rgba(0, 150, 255, 0.2);
+  --gold-glass: rgba(255, 215, 0, 0.1);
+  --gold-border: rgba(255, 215, 0, 0.3);
+  
+  /* Enhanced Gradients with Gold */
+  --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  --gradient-secondary: linear-gradient(45deg, var(--quantum-purple), var(--nebula-pink));
+  --gradient-tertiary: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+  --gradient-gold: linear-gradient(135deg, var(--gold-color), var(--primary-color));
+  --gradient-profit: linear-gradient(45deg, var(--gold-color), var(--accent-color));
+  
+  /* Enhanced Shadows & Glows */
+  --neon-glow-cyan: 0 0 20px rgba(0, 255, 255, 0.8);
+  --neon-glow-magenta: 0 0 20px rgba(255, 0, 255, 0.8);
+  --neon-glow-green: 0 0 20px rgba(0, 255, 65, 0.8);
+  --neon-glow-gold: 0 0 25px rgba(255, 215, 0, 0.7);
+  --inner-shadow: inset 0 0 20px rgba(0, 255, 255, 0.2);
+  --inner-shadow-gold: inset 0 0 20px rgba(255, 215, 0, 0.2);
+  
+  /* Typography */
+  --font-primary: 'Orbitron', monospace;
+  --font-secondary: 'Space Mono', monospace;
+  --font-tertiary: 'Rajdhani', sans-serif;
+}
+
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-secondary);
+  background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 50%, var(--light-bg) 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Investor Thesis Background Pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 50%, rgba(255, 0, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 50% 100%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 215, 0, 0.03) 2px,
+      rgba(255, 215, 0, 0.03) 4px
+    );
+  animation: nebulaFloat 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes nebulaFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(-20px, -20px) scale(1.1); }
+  66% { transform: translate(20px, -10px) scale(0.9); }
+}
+
+/* Investor Thesis Matrix Rain Effect */
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.1;
+  background: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 50px,
+      var(--gold-color) 50px,
+      var(--gold-color) 51px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 50px,
+      var(--gold-color) 50px,
+      var(--gold-color) 51px
+    );
+  animation: matrixScroll 20s linear infinite;
+}
+
+@keyframes matrixScroll {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(50px, 50px); }
+}
+
+/* Grid Overlay */
+.grid-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  background: 
+    linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Dashboard Container */
+.dashboard-container {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* Header Styles - Investor Thesis Enhanced */
+.dashboard-header {
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.03) 100%),
+    var(--glass-white);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gold-border);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 25px rgba(255, 215, 0, 0.15),
+    inset 0 0 25px rgba(255, 215, 0, 0.08);
+}
+
+.dashboard-header::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-primary);
+  border-radius: 15px;
+  opacity: 0.3;
+  z-index: -1;
+  animation: borderPulse 3s ease-in-out infinite;
+}
+
+@keyframes borderPulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+.dashboard-title {
+  font-family: var(--font-primary);
+  font-size: 2.5rem;
+  font-weight: 900;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  animation: glitchText 2s infinite;
+  text-shadow: var(--profit-glow);
+}
+
+@keyframes glitchText {
+  0%, 100% { text-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+  25% { text-shadow: -2px 0 20px rgba(255, 0, 255, 0.5); }
+  50% { text-shadow: 2px 0 20px rgba(0, 255, 65, 0.5); }
+  75% { text-shadow: 0 2px 20px rgba(255, 107, 53, 0.5); }
+}
+
+/* Dashboard Grid */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Card Styles - Investor Thesis Enhanced */
+.cyber-card {
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(0, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.02) 100%),
+    var(--glass-white);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gold-border);
+  border-radius: 15px;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  min-height: 200px;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.1),
+    inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-secondary);
+  border-radius: 15px;
+  opacity: 0.2;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    var(--neon-glow-gold),
+    var(--neon-glow-cyan),
+    0 10px 30px rgba(255, 215, 0, 0.3);
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0.05) 100%),
+    var(--glass-white);
+}
+
+.cyber-card:hover::before {
+  opacity: 0.6;
+  background: var(--gradient-gold);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.card-title {
+  font-family: var(--font-primary);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-gold);
+  border-radius: 50%;
+  font-size: 1.2rem;
+  animation: iconRotate 3s linear infinite;
+  box-shadow: var(--neon-glow-gold);
+}
+
+@keyframes iconRotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Metric Display */
+.metric-value {
+  font-family: var(--font-primary);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--gold-color);
+  margin: 1rem 0;
+  text-shadow: var(--profit-glow);
+}
+
+.metric-label {
+  font-family: var(--font-tertiary);
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.metric-change {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+.metric-change.positive {
+  background: rgba(0, 255, 65, 0.2);
+  color: var(--cyber-accent);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.metric-change.negative {
+  background: rgba(255, 0, 64, 0.2);
+  color: var(--cyber-danger);
+  border: 1px solid rgba(255, 0, 64, 0.3);
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-online {
+  background: rgba(0, 255, 65, 0.2);
+  color: var(--cyber-accent);
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.status-offline {
+  background: rgba(255, 0, 64, 0.2);
+  color: var(--cyber-danger);
+  border: 1px solid rgba(255, 0, 64, 0.3);
+}
+
+.status-warning {
+  background: rgba(255, 107, 53, 0.2);
+  color: var(--cyber-warning);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+}
+
+/* Status Dots */
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: statusPulse 2s infinite;
+}
+
+.status-online .status-dot {
+  background: var(--cyber-accent);
+  box-shadow: 0 0 10px var(--cyber-accent);
+}
+
+.status-offline .status-dot {
+  background: var(--cyber-danger);
+  box-shadow: 0 0 10px var(--cyber-danger);
+}
+
+.status-warning .status-dot {
+  background: var(--cyber-warning);
+  box-shadow: 0 0 10px var(--cyber-warning);
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Progress Bars */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-profit);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--neon-glow-gold);
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Data Tables */
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 1rem 0;
+}
+
+.data-table th {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  color: var(--cyber-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--glass-border);
+}
+
+.data-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+  color: var(--cyber-primary);
+  opacity: 0.9;
+}
+
+.data-table tr:hover td {
+  background: var(--hologram-blue);
+  opacity: 1;
+}
+
+/* Buttons - Investor Thesis Enhanced */
+.cyber-button {
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.08) 0%, rgba(0, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0.04) 100%),
+    var(--glass-white);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gold-border);
+  border-radius: 25px;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 18px rgba(255, 215, 0, 0.12),
+    inset 0 0 18px rgba(255, 215, 0, 0.06);
+}
+
+.cyber-button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: var(--gradient-gold);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+}
+
+.cyber-button:hover {
+  box-shadow: 
+    var(--neon-glow-gold),
+    var(--neon-glow-cyan),
+    0 8px 25px rgba(255, 215, 0, 0.4);
+  transform: translateY(-2px);
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(0, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.08) 100%),
+    var(--glass-white);
+  border-color: var(--gold-color);
+}
+
+.cyber-button:hover::before {
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+}
+
+.cyber-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* Navigation - Investor Thesis Enhanced */
+.cyber-nav {
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.07) 0%, rgba(0, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.03) 100%),
+    var(--glass-white);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gold-border);
+  border-radius: 15px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  box-shadow: 
+    0 0 22px rgba(255, 215, 0, 0.14),
+    inset 0 0 22px rgba(255, 215, 0, 0.07);
+}
+
+.nav-list {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-item {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(0, 255, 255, 0.08) 100%);
+  border: 1px solid var(--gold-border);
+  color: var(--primary-color);
+  text-decoration: none;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.1);
+}
+
+.nav-item:hover {
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(0, 255, 255, 0.15) 100%);
+  box-shadow: 
+    var(--neon-glow-gold),
+    0 5px 20px rgba(255, 215, 0, 0.3);
+  transform: translateY(-2px);
+  border-color: var(--gold-color);
+}
+
+.nav-item.active {
+  background: var(--gradient-gold);
+  color: var(--deep-space);
+  border-color: var(--gold-color);
+  box-shadow: var(--neon-glow-gold);
+}
+
+/* Charts Container - Investor Thesis Enhanced */
+.chart-container {
+  background: 
+    linear-gradient(135deg, rgba(255, 215, 0, 0.06) 0%, rgba(0, 255, 255, 0.04) 50%, rgba(255, 255, 255, 0.02) 100%),
+    var(--glass-white);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--gold-border);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 
+    0 0 20px rgba(255, 215, 0, 0.12),
+    inset 0 0 20px rgba(255, 215, 0, 0.06);
+}
+
+.chart-container::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--gradient-tertiary);
+  border-radius: 15px;
+  opacity: 0.2;
+  z-index: -1;
+}
+
+/* Loading Animation */
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--glass-border);
+  border-top: 3px solid var(--cyber-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboard-title {
+    font-size: 1.8rem;
+  }
+  
+  .metric-value {
+    font-size: 2rem;
+  }
+  
+  .nav-list {
+    flex-direction: column;
+  }
+  
+  .data-table {
+    font-size: 0.8rem;
+  }
+  
+  .data-table th,
+  .data-table td {
+    padding: 0.5rem;
+  }
+}
+
+/* Holographic Effects */
+.hologram-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+  animation: hologramScan 3s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes hologramScan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Glitch Effect */
+.glitch-effect {
+  position: relative;
+  animation: glitchAnimation 2s infinite;
+}
+
+@keyframes glitchAnimation {
+  0%, 100% { 
+    transform: translate(0);
+    filter: hue-rotate(0deg);
+  }
+  20% { 
+    transform: translate(-2px, 2px);
+    filter: hue-rotate(90deg);
+  }
+  40% { 
+    transform: translate(-2px, -2px);
+    filter: hue-rotate(180deg);
+  }
+  60% { 
+    transform: translate(2px, 2px);
+    filter: hue-rotate(270deg);
+  }
+  80% { 
+    transform: translate(2px, -2px);
+    filter: hue-rotate(360deg);
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-space);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-primary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyber-primary);
+}
+
+/* Tooltips */
+.tooltip {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip::before {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--deep-space);
+  color: var(--cyber-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--glass-border);
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+.tooltip:hover::before {
+  opacity: 1;
+}
+
+/* Pulse Animation for Live Data */
+.live-data {
+  animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { 
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% { 
+    opacity: 0.8;
+    transform: scale(1.02);
+  }
+}
+
+/* Cyber Grid Background */
+.cyber-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: gridMove 10s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { transform: translate(0, 0); }
+  100% { transform: translate(20px, 20px); }
+}
