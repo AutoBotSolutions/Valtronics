@@ -1,12 +1,5 @@
 # Valtronics - AI-Powered Intelligent Electronics Ecosystem
 
-[![GitHub stars](https://img.shields.io/github/stars/AutoBotSolutions/Valtronics?style=social&logo=github)](https://github.com/AutoBotSolutions/Valtronics/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/AutoBotSolutions/Valtronics?style=social&logo=github)](https://github.com/AutoBotSolutions/Valtronics/network)
-[![GitHub issues](https://img.shields.io/github/issues/AutoBotSolutions/Valtronics?logo=github)](https://github.com/AutoBotSolutions/Valtronics/issues)
-[![GitHub license](https://img.shields.io/github/license/AutoBotSolutions/Valtronics?logo=github)](https://github.com/AutoBotSolutions/Valtronics/blob/main/LICENSE)
-[![Build Status](https://img.shields.io/github/actions/workflow/status/AutoBotSolutions/Valtronics/deploy.yml?logo=github)](https://github.com/AutoBotSolutions/Valtronics/actions)
-[![Website](https://img.shields.io/badge/website-live-brightgreen?logo=github-pages)](https://autobotsolutions.github.io/Valtronics/)
-
 Valtronics is a cutting-edge, enterprise-grade IoT platform that delivers real-time monitoring, advanced analytics, and AI-powered insights for electronic devices and sensors. Built with a modern microservices architecture, it provides businesses with the tools to monitor, analyze, and control their IoT infrastructure through an intuitive web-based dashboard and robust API ecosystem.
 
 [Live Demo](https://autobotsolutions.github.io/Valtronics/) • [Documentation](https://github.com/AutoBotSolutions/Valtronics/wiki) • [API Reference](https://autobotsolutions.github.io/Valtronics/api.html)
