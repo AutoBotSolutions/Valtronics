@@ -1,0 +1,15 @@
+# Temporary trigger for GitHub Pages deployment
+name: Trigger Pages Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Trigger Pages
+        run: echo "Triggering GitHub Pages deployment"
